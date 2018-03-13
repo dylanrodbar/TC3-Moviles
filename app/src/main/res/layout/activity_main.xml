@@ -33,6 +33,7 @@
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
                 android:background="@android:color/transparent"
+                android:onClick="myMusicOptionClicked"
                 app:srcCompat="@drawable/iconomenuuno" />
 
             <ImageButton

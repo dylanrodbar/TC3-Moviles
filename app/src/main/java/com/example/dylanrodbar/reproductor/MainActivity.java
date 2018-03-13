@@ -21,7 +21,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void myMusicOptionClicked(View view) {
-
+        Intent intent = new Intent(this, MusicListActivity.class);
+        intent.putExtra(EXTRA_MESSAGE, "");
+        startActivity(intent);
     }
 
     public void topMusicOptionClicked(View view) {

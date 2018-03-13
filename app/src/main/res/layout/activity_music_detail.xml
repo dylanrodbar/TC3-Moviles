@@ -52,5 +52,62 @@
             android:layout_marginTop="16dp"
             android:text="ARTPOP" />
 
+        <ImageButton
+            android:id="@+id/aleatorySongButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="22dp"
+            android:layout_toStartOf="@+id/previousSongButton"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/botonaleatorio" />
+
+        <ImageButton
+            android:id="@+id/previousSongButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignTop="@+id/aleatorySongButton"
+            android:layout_toStartOf="@+id/playSongButton"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/botoncancionanterior" />
+
+        <ImageButton
+            android:id="@+id/playSongButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignTop="@+id/previousSongButton"
+            android:layout_toStartOf="@+id/netxSongButton"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/botonreproducir" />
+
+        <ImageButton
+            android:id="@+id/netxSongButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignTop="@+id/playSongButton"
+            android:layout_toEndOf="@+id/txtSongDetail"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/botoncancionsiguiente" />
+
+        <ImageButton
+            android:id="@+id/repeatSongButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignTop="@+id/netxSongButton"
+            android:layout_toEndOf="@+id/netxSongButton"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/botonrepeticion" />
+
+
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
