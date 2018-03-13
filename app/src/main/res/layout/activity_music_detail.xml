@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context="com.example.dylanrodbar.reproductor.MusicDetailActivity">
+
+    <RelativeLayout
+        android:layout_width="344dp"
+        android:layout_height="495dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/currentPlayingSongDetail"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="34dp"
+            android:src="@drawable/artpop"></de.hdodenhof.circleimageview.CircleImageView>
+
+        <TextView
+            android:id="@+id/txtSongDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/txtArtistDetail"
+            android:layout_below="@+id/currentPlayingSongDetail"
+            android:layout_marginTop="11dp"
+            android:text="Applause" />
+
+        <TextView
+            android:id="@+id/txtArtistDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/currentPlayingSongDetail"
+            android:layout_alignTop="@+id/txtSongDetail"
+            android:layout_marginEnd="82dp"
+            android:layout_marginTop="35dp"
+            android:text="Lady Gaga" />
+
+        <TextView
+            android:id="@+id/txtAlbumDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/txtArtistDetail"
+            android:layout_below="@+id/txtArtistDetail"
+            android:layout_marginTop="16dp"
+            android:text="ARTPOP" />
+
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>
