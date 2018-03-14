@@ -15,98 +15,123 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/currentPlayingSongDetail"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="34dp"
-            android:src="@drawable/artpop"></de.hdodenhof.circleimageview.CircleImageView>
-
         <TextView
             android:id="@+id/txtSongDetail"
-            android:layout_width="wrap_content"
+            android:layout_width="344dp"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/txtArtistDetail"
-            android:layout_below="@+id/currentPlayingSongDetail"
-            android:layout_marginTop="11dp"
-            android:text="Applause" />
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:fontFamily="serif"
+            android:text="Applause"
+            android:textAlignment="center"
+            android:textColor="@android:color/background_light" />
 
         <TextView
             android:id="@+id/txtArtistDetail"
-            android:layout_width="wrap_content"
+            android:layout_width="344dp"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/currentPlayingSongDetail"
-            android:layout_alignTop="@+id/txtSongDetail"
-            android:layout_marginEnd="82dp"
-            android:layout_marginTop="35dp"
-            android:text="Lady Gaga" />
+            android:layout_alignStart="@+id/txtSongDetail"
+            android:layout_below="@+id/txtSongDetail"
+            android:layout_marginTop="7dp"
+            android:text="Lady Gaga"
+            android:textAlignment="center"
+            android:textColor="@android:color/darker_gray" />
 
         <TextView
             android:id="@+id/txtAlbumDetail"
-            android:layout_width="wrap_content"
+            android:layout_width="344dp"
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/txtArtistDetail"
             android:layout_below="@+id/txtArtistDetail"
-            android:layout_marginTop="16dp"
-            android:text="ARTPOP" />
+            android:layout_marginTop="8dp"
+            android:text="ARTPOP"
+            android:textAlignment="center"
+            android:textColor="@color/colorJoanne" />
 
-        <ImageButton
-            android:id="@+id/aleatorySongButton"
-            android:layout_width="60dp"
+
+        <RelativeLayout
+            android:id="@+id/relativeSongBar"
+            android:layout_width="344dp"
             android:layout_height="60dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="22dp"
-            android:layout_toStartOf="@+id/previousSongButton"
-            android:adjustViewBounds="true"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/botonaleatorio" />
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="92dp"
+            android:background="@color/colorPrimary">
 
-        <ImageButton
-            android:id="@+id/previousSongButton"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_alignTop="@+id/aleatorySongButton"
-            android:layout_toStartOf="@+id/playSongButton"
-            android:adjustViewBounds="true"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/botoncancionanterior" />
+            <ImageButton
+                android:id="@+id/aleatorySongButton"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/botonaleatorio" />
 
-        <ImageButton
-            android:id="@+id/playSongButton"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_alignTop="@+id/previousSongButton"
-            android:layout_toStartOf="@+id/netxSongButton"
-            android:adjustViewBounds="true"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/botonreproducir" />
+            <ImageButton
+                android:id="@+id/previousSongButton"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/aleatorySongButton"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/botoncancionanterior" />
 
-        <ImageButton
-            android:id="@+id/netxSongButton"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_alignTop="@+id/playSongButton"
-            android:layout_toEndOf="@+id/txtSongDetail"
-            android:adjustViewBounds="true"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/botoncancionsiguiente" />
+            <ImageButton
+                android:id="@+id/playSongButton"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/botonreproducir" />
 
-        <ImageButton
-            android:id="@+id/repeatSongButton"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_alignTop="@+id/netxSongButton"
-            android:layout_toEndOf="@+id/netxSongButton"
-            android:adjustViewBounds="true"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/botonrepeticion" />
+            <ImageButton
+                android:id="@+id/netxSongButton"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentTop="true"
+                android:layout_toStartOf="@+id/repeatSongButton"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/botoncancionsiguiente" />
+
+            <ImageButton
+                android:id="@+id/repeatSongButton"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/botonrepeticion" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeSongImg"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_above="@+id/txtSongDetail"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/image_shape"
+                app:srcCompat="@drawable/artpop" />
+        </RelativeLayout>
 
 
     </RelativeLayout>

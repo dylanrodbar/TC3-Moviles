@@ -6,8 +6,7 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@color/colorJoanne">
+        android:layout_height="fill_parent">
 
         <TextView
             android:id="@+id/artist"
@@ -30,14 +29,14 @@
             android:layout_toStartOf="@+id/songImage"
             android:text="Prueba" />
 
-        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        <ImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/songImage"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_alignParentEnd="true"
             android:layout_gravity="right"
             android:layout_marginEnd="9dp"
-            android:src="@drawable/artpop"></de.hdodenhof.circleimageview.CircleImageView>
+            android:src="@drawable/artpop"></ImageView>
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
