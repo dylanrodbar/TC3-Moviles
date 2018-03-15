@@ -57,6 +57,8 @@ public class MusicListActivity extends AppCompatActivity {
         String albumName = songs.get(position).getAlbumName();
         String path = songs.get(position).getPath();
         String data = songs.get(position).getData();
+        long aId = songs.get(position).getAlbumId();
+        long sId = songs.get(position).getSongId();
         Intent intent = new Intent(this, MusicDetailActivity.class);
         intent.putExtra(EXTRA_MESSAGE, "");
         intent.putExtra("song", songName);
@@ -64,6 +66,8 @@ public class MusicListActivity extends AppCompatActivity {
         intent.putExtra("album", albumName);
         intent.putExtra("path", path);
         intent.putExtra("data", data);
+        intent.putExtra("albumid", aId);
+        intent.putExtra("songid", sId);
         startActivity(intent);
     }
 
@@ -74,18 +78,28 @@ public class MusicListActivity extends AppCompatActivity {
         TextView t = findViewById(R.id.txtSongDetail);
         TextView t1 = findViewById(R.id.txtArtistDetail);
         TextView t2 = findViewById(R.id.txtAlbumDetail);
-        final String[] projection = {MediaStore.Audio.Media.ALBUM_ID};
         ImageView circle = findViewById(R.id.imageView2);
         ContentResolver contentResolver = getContentResolver();
         Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        Cursor songCursor = contentResolver.query(songUri, null, null, null, null);
+
+        String[] projection = {
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.ALBUM,
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.DATA,    // filepath of the audio file
+                MediaStore.Audio.Media._ID,     // context id/ uri id of the file
+        };
+
+        Cursor songCursor = contentResolver.query(songUri, projection, null, null, null);
         if (songCursor != null && songCursor.moveToFirst()) {
 
             int songTitle = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
             int artistTitle = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
             int albumTitle = songCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
             int data = songCursor.getColumnIndex(MediaStore.Audio.Media.DATA);
-            //long albumId = songCursor.getLong(songCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
+            int aId = songCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID);
+            int sId = songCursor.getColumnIndex(MediaStore.Audio.Media._ID);
 
             do {
                 Song song = new Song();
@@ -98,12 +112,18 @@ public class MusicListActivity extends AppCompatActivity {
                 song.setArtistName(artistTitleS);
                 song.setAlbumName(albumTitleS);
                 song.setData(dataS);
+                song.setAlbumId(aId);
+                song.setSongId(sId);
                 songs.add(song);
             } while (songCursor.moveToNext());
 
         }
 
+        Toast toast1 =
+                Toast.makeText(getApplicationContext(),
+                        String.valueOf(songs.get(3).getSongId()), Toast.LENGTH_SHORT);
 
+        toast1.show();
 
 
         ContentResolver musicResolve = getContentResolver();

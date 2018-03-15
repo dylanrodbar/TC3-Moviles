@@ -55,7 +55,7 @@
             android:layout_height="60dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="92dp"
+            android:layout_marginBottom="48dp"
             android:background="@color/colorPrimary">
 
             <ImageButton
@@ -88,6 +88,7 @@
                 android:layout_centerHorizontal="true"
                 android:adjustViewBounds="true"
                 android:background="@android:color/transparent"
+                android:onClick="buttonPlayPauseClicked"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/botonreproducir" />
 
@@ -132,6 +133,22 @@
                 android:background="@drawable/image_shape"
                 app:srcCompat="@drawable/artpop" />
         </RelativeLayout>
+
+        <SeekBar
+            android:id="@+id/volumeSeekBar"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/txtAlbumDetail"
+            android:layout_marginEnd="38dp" />
+
+        <SeekBar
+            android:id="@+id/advanceSeekBar"
+            android:layout_width="344dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/relativeSongBar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="16dp" />
 
 
     </RelativeLayout>

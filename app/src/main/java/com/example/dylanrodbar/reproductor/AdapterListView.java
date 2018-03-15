@@ -1,14 +1,18 @@
 package com.example.dylanrodbar.reproductor;
 
 import android.app.Activity;
+import android.content.ContentUris;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -40,8 +44,13 @@ public class AdapterListView extends ArrayAdapter<Song> {
         txtArtist.setText(songs.get(position).getArtistName());
         txtSong.setText(songs.get(position).getSongName());
 
-        Bitmap bm = BitmapFactory.decodeFile(songs.get(0).getPath());
-        imageView.setImageBitmap(bm);
+        Bitmap bm = BitmapFactory.decodeFile(songs.get(position).getPath());
+        //imageView.setImageResource(R.drawable.tfm);
+        //imageView.setImageBitmap(bm);
+
+        Uri artworkUri = Uri.parse("content://media/external/audio/albumart");
+        Uri path1 = ContentUris.withAppendedId(artworkUri, songs.get(position).getAlbumId());
+        Glide.with(imageView.getContext()).load(path1).into(imageView);
 
         //imageView.setImageResource(imgid[position]);
         return rowView;

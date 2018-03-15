@@ -11,6 +11,7 @@ public class Song {
     private String path;
     private String data;
     private long albumId;
+    private long songId;
 
     Song() {
     }
@@ -20,6 +21,9 @@ public class Song {
     }
     public long getAlbumId() {
         return albumId;
+    }
+    public long getSongId() {
+        return songId;
     }
     public String getArtistName() {
         return artistName;
@@ -50,5 +54,8 @@ public class Song {
     }
     public void setAlbumId(long albumId) {
         this.albumId = albumId;
+    }
+    public void setSongId(long songId) {
+        this.songId = songId;
     }
 }

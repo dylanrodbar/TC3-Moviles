@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.dylanrodbar.reproductor">
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
@@ -21,7 +22,11 @@
         <activity android:name=".TopMusicListActivity" />
         <activity android:name=".RecentMusicListActivity" />
         <activity android:name=".RecommendedMusicListActivity" />
-        <activity android:name=".MusicDetailActivity"></activity>
+        <activity android:name=".MusicDetailActivity" />
+        <activity
+            android:name=".MainMediaPlayse"
+            android:label="@string/title_activity_main_media_playse"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
