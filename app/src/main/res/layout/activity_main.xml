@@ -15,111 +15,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageButton
-            android:id="@+id/myMusicOption"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
 
-            android:layout_alignStart="@+id/recentMusicOption"
-            android:layout_alignTop="@+id/topMusicOption"
-            android:adjustViewBounds="true"
-            android:background="@android:color/transparent"
-            android:onClick="myMusicOptionClicked"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/iconomenuuno" />
-
-        <ImageButton
-            android:id="@+id/topMusicOption"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginEnd="11dp"
-            android:layout_marginTop="82dp"
-            android:adjustViewBounds="true"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/iconomenudos" />
-
-        <ImageButton
-            android:id="@+id/recommendedMusicOption"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_alignStart="@+id/topMusicOption"
-            android:layout_alignTop="@+id/recentMusicOption"
-            android:adjustViewBounds="true"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/iconomenucuatro" />
-
-        <ImageButton
-            android:id="@+id/recentMusicOption"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+        <ListView
+            android:id="@+id/listSongs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/myMusicOption"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:adjustViewBounds="true"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/iconomenutres" />
-
-        <RelativeLayout
-            android:id="@+id/relativeLayout"
-            android:layout_width="344dp"
-            android:layout_height="50dp"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/recommendedMusicOption"
-            android:layout_marginTop="9dp"
-            android:background="@color/colorJoanne"
-            android:onClick="currentSongClicked">
-
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/currentPlayingSong"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="true"
-                android:src="@drawable/artpop"></de.hdodenhof.circleimageview.CircleImageView>
-
-            <ImageButton
-                android:id="@+id/aleatorySongButton"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="15dp"
-                android:adjustViewBounds="true"
-                android:background="@android:color/transparent"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/botonreproducir" />
-
-            <TextView
-                android:id="@+id/txtSong"
-                android:layout_width="344dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/txtArtist"
-                android:fontFamily="serif"
-                android:text="Applause"
-                android:textAlignment="center"
-                android:textColor="@android:color/background_light" />
-
-            <TextView
-                android:id="@+id/txtArtist"
-                android:layout_width="344dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginBottom="8dp"
-                android:text="Lady Gaga * ARTPOP"
-                android:textAlignment="center"
-                android:textColor="@color/colorPrimary" />
-
-
-        </RelativeLayout>
-
+            android:layout_alignParentTop="true" />
     </RelativeLayout>
 
 

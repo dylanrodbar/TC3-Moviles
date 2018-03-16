@@ -66,6 +66,7 @@
                 android:layout_centerVertical="true"
                 android:adjustViewBounds="true"
                 android:background="@android:color/transparent"
+                android:onClick="buttonAleatoryClicked"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/botonaleatorio" />
 
@@ -77,6 +78,7 @@
                 android:layout_toEndOf="@+id/aleatorySongButton"
                 android:adjustViewBounds="true"
                 android:background="@android:color/transparent"
+                android:onClick="buttonPreviousClicked"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/botoncancionanterior" />
 
@@ -90,7 +92,7 @@
                 android:background="@android:color/transparent"
                 android:onClick="buttonPlayPauseClicked"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/botonreproducir" />
+                app:srcCompat="@drawable/botonpausar" />
 
             <ImageButton
                 android:id="@+id/netxSongButton"
@@ -100,6 +102,7 @@
                 android:layout_toStartOf="@+id/repeatSongButton"
                 android:adjustViewBounds="true"
                 android:background="@android:color/transparent"
+                android:onClick="buttonNextClicked"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/botoncancionsiguiente" />
 
@@ -111,6 +114,7 @@
                 android:layout_alignParentTop="true"
                 android:adjustViewBounds="true"
                 android:background="@android:color/transparent"
+                android:onClick="buttonRepeatClicked"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/botonrepeticion" />
 
@@ -132,6 +136,7 @@
                 android:layout_marginBottom="15dp"
                 android:background="@drawable/image_shape"
                 app:srcCompat="@drawable/artpop" />
+
         </RelativeLayout>
 
         <SeekBar
@@ -149,6 +154,13 @@
             android:layout_above="@+id/relativeSongBar"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="16dp" />
+
+        <com.example.dylanrodbar.reproductor.ScrollTextView
+            android:id="@+id/scrolltext"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/relativeSongImg"
+            android:layout_centerHorizontal="true" />
 
 
     </RelativeLayout>

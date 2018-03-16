@@ -16,6 +16,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.BaseColumns;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -38,30 +39,53 @@ import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MusicDetailActivity extends AppCompatActivity {
 
-    private static final int MY_PERMISSION_REQUEST = 1;
     MediaPlayer mediaPlayer;
     AudioManager audioManager;
+    ArrayList<Song> songs;
+    ArrayList<Song> auxiliarSongs;
+    ArrayList<Song> aleatorySongs;
+    ArrayList<Song> queue;
+    private boolean repeat = false;
+    private boolean aleatory = false;
+    SeekBar advancedSeekBar;
+    int countSongs = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_detail);
         boolean pause = false;
+
         String song = getIntent().getStringExtra("song");
         String artist = getIntent().getStringExtra("artist");
         String album = getIntent().getStringExtra("album");
         String path = getIntent().getStringExtra("path");
         String data = getIntent().getStringExtra("data");
+        songs = new ArrayList<Song>();
+        auxiliarSongs = new ArrayList<Song>();
+        aleatorySongs = new ArrayList<Song>();
+        queue = new ArrayList<Song>();
+        songs = (ArrayList<Song>) getIntent().getSerializableExtra("songs");
         long aID = getIntent().getLongExtra("albumid", 0);
         long sID = getIntent().getLongExtra("songid", 0);
         TextView tSong = findViewById(R.id.txtSongDetail);
         TextView tArtist = findViewById(R.id.txtArtistDetail);
         TextView tAlbum = findViewById(R.id.txtAlbumDetail);
         ImageView image = findViewById(R.id.imageView2);
+
+        /*Toast toast1 =
+                Toast.makeText(getApplicationContext(),
+                        String.valueOf(aID), Toast.LENGTH_SHORT);
+
+        toast1.show();*/
 
         tSong.setText(song);
         tArtist.setText(artist);
@@ -72,6 +96,12 @@ public class MusicDetailActivity extends AppCompatActivity {
             mediaPlayer.setDataSource(data);
             mediaPlayer.prepare();
             mediaPlayer.start();
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    nextSong();
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -99,16 +129,16 @@ public class MusicDetailActivity extends AppCompatActivity {
 
             }
         });
-        SeekBar advancedSeekBar = findViewById(R.id.advanceSeekBar);
-        int duration = mediaPlayer.getDuration();
-        int progress = mediaPlayer.getCurrentPosition();
+        advancedSeekBar = findViewById(R.id.advanceSeekBar);
+        final int duration = mediaPlayer.getDuration();
+        final int progress = mediaPlayer.getCurrentPosition();
         advancedSeekBar.setMax(duration);
         advancedSeekBar.setProgress(progress);
 
         advancedSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mediaPlayer.seekTo(progress);
+                if(fromUser) mediaPlayer.seekTo(progress); //OMG
             }
 
             @Override
@@ -122,19 +152,89 @@ public class MusicDetailActivity extends AppCompatActivity {
             }
         });
 
+        Uri artworkUri = Uri.parse("content://media/external/audio/albumart");
+        Uri path1 = ContentUris.withAppendedId(artworkUri, aID);
+        Glide.with(image.getContext()).load(path).into(image);
+
+
+        createAuxiliarArray();
+        createQueue();
+        createAleatory();
+        createThread();
+        createTimer();
+
 
 
 
         //Bitmap bm = BitmapFactory.decodeFile(path);
         //image.setImageBitmap(bm);
 
+
+
+
+
+
+
+
+
+    }
+
+    public void createAuxiliarArray() {
+        for(Song s: songs) {
+            Song so = new Song();
+            so.setSongName(s.getSongName());
+            so.setArtistName(s.getArtistName());
+            so.setAlbumName(s.getAlbumName());
+            so.setAlbumId(s.getAlbumId());
+            so.setSongId(s.getSongId());
+            so.setData(s.getData());
+            auxiliarSongs.add(so);
+        }
+    }
+
+    public void createQueue() {
+        for(Song s: songs) {
+            Song so = new Song();
+            so.setSongName(s.getSongName());
+            so.setArtistName(s.getArtistName());
+            so.setAlbumName(s.getAlbumName());
+            so.setAlbumId(s.getAlbumId());
+            so.setSongId(s.getSongId());
+            so.setData(s.getData());
+            queue.add(so);
+        }
+        Song z = queue.get(1);
         Toast toast1 =
                 Toast.makeText(getApplicationContext(),
-                        String.valueOf(sID), Toast.LENGTH_SHORT);
+                        String.valueOf(z.getAlbumId()), Toast.LENGTH_SHORT);
 
         toast1.show();
+    }
+
+    public void createAleatory() {
+        int n = songs.size();
+        for(int i = 0; i < n; i++) {
+            int r = auxiliarSongs.size();
+            Random rand = new Random();
+            int randomNum = rand.nextInt((r - 1) + 1) + 1;
+            int ri = randomNum - 1;
+
+            Song so = new Song();
+            so.setSongName(auxiliarSongs.get(ri).getSongName());
+            so.setArtistName(auxiliarSongs.get(ri).getArtistName());
+            so.setAlbumName(auxiliarSongs.get(ri).getAlbumName());
+            so.setAlbumId(auxiliarSongs.get(ri).getAlbumId());
+            so.setSongId(auxiliarSongs.get(ri).getSongId());
+            so.setData(auxiliarSongs.get(ri).getData());
+            aleatorySongs.add(so);
+
+            auxiliarSongs.remove(ri);
+
+        }
+    }
 
 
+    public void createThread() {
         Runnable r = new Runnable() {
             @Override
             public void run() {
@@ -172,50 +272,16 @@ public class MusicDetailActivity extends AppCompatActivity {
         Thread t = new Thread(r, "T1");
         t.start();
 
-
-        if(ContextCompat.checkSelfPermission(MusicDetailActivity.this,
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-            if(ActivityCompat.shouldShowRequestPermissionRationale(MusicDetailActivity.this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
-
-                ActivityCompat.requestPermissions(MusicDetailActivity.this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSION_REQUEST);
-            }
-            else {
-
-                ActivityCompat.requestPermissions(MusicDetailActivity.this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSION_REQUEST);
-            }
-        }
-        else {
-
-        }
-
     }
 
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
-        switch(requestCode) {
-            case MY_PERMISSION_REQUEST:
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
-
-                    if(ContextCompat.checkSelfPermission(MusicDetailActivity.this,
-                            Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                        Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-                else {
-                    Toast.makeText(this, "No permission granted", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-                return;
-        }
+    public void createTimer() {
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                advancedSeekBar.setProgress(mediaPlayer.getCurrentPosition());
+            }
+        },0,1000);
     }
 
 
@@ -233,13 +299,109 @@ public class MusicDetailActivity extends AppCompatActivity {
         ImageButton img = findViewById(R.id.playSongButton);
         if(mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
-            img.setImageResource(R.drawable.botonpausar);
+            img.setImageResource(R.drawable.botonreproducir);
         }
         else {
             mediaPlayer.start();
-            img.setImageResource(R.drawable.botonreproducir);
+            img.setImageResource(R.drawable.botonpausar);
         }
     }
+
+    public void buttonNextClicked(View view) {
+        nextSong();
+    }
+
+    public void buttonPreviousClicked(View view) {
+        previousSong();
+    }
+
+    public void buttonRepeatClicked(View view) {
+        mediaPlayer.setLooping(!repeat);
+    }
+
+    public void buttonAleatoryClicked(View view) {
+        aleatory = !aleatory;
+    }
+
+    public void drawNewSong(ArrayList<Song> songss) {
+        TextView tSong = findViewById(R.id.txtSongDetail);
+        TextView tArtist = findViewById(R.id.txtArtistDetail);
+        TextView tAlbum = findViewById(R.id.txtAlbumDetail);
+
+
+        tSong.setText(songss.get(countSongs).getSongName());
+        tArtist.setText(songss.get(countSongs).getArtistName());
+        tAlbum.setText(songss.get(countSongs).getAlbumName());
+
+    }
+
+    public void nextSong() {
+
+
+        if(countSongs < queue.size()) {
+            countSongs++;
+            if(countSongs < queue.size()) {
+
+                mediaPlayer.reset();
+                try {
+                    if(aleatory){
+                        mediaPlayer.setDataSource(aleatorySongs.get(countSongs).getData());
+                        drawNewSong(aleatorySongs);
+                    }
+                    else{
+                        mediaPlayer.setDataSource(queue.get(countSongs).getData());
+                        drawNewSong(queue);
+                    }
+                    mediaPlayer.prepare();
+                    mediaPlayer.start();
+
+                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            nextSong();
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+
+    }
+
+    public void previousSong() {
+        if(countSongs >= 0) {
+            countSongs--;
+            if(countSongs >= 0) {
+
+                mediaPlayer.reset();
+                try {
+                    if(aleatory){
+                        mediaPlayer.setDataSource(aleatorySongs.get(countSongs).getData());
+                        drawNewSong(aleatorySongs);
+                    }
+                    else{
+                        mediaPlayer.setDataSource(queue.get(countSongs).getData());
+                        drawNewSong(queue);
+                    }
+                    mediaPlayer.prepare();
+                    mediaPlayer.start();
+                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            nextSong();
+                        }
+                    });
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
 
 
 

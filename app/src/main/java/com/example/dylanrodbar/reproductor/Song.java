@@ -1,10 +1,12 @@
 package com.example.dylanrodbar.reproductor;
 
+import java.io.Serializable;
+
 /**
  * Created by dylanrodbar on 14/3/2018.
  */
 
-public class Song {
+public class Song implements Serializable{
     private String songName;
     private String artistName;
     private String albumName;

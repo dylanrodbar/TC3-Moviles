@@ -44,6 +44,8 @@ public class AdapterListView extends ArrayAdapter<Song> {
         txtArtist.setText(songs.get(position).getArtistName());
         txtSong.setText(songs.get(position).getSongName());
 
+
+
         Bitmap bm = BitmapFactory.decodeFile(songs.get(position).getPath());
         //imageView.setImageResource(R.drawable.tfm);
         //imageView.setImageBitmap(bm);
@@ -52,7 +54,7 @@ public class AdapterListView extends ArrayAdapter<Song> {
         Uri path1 = ContentUris.withAppendedId(artworkUri, songs.get(position).getAlbumId());
         Glide.with(imageView.getContext()).load(path1).into(imageView);
 
-        //imageView.setImageResource(imgid[position]);
+        imageView.setImageBitmap(bm);
         return rowView;
 
     };
