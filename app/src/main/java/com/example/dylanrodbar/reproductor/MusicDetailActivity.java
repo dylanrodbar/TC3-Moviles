@@ -34,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
@@ -106,6 +107,8 @@ public class MusicDetailActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+
+
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -130,8 +133,46 @@ public class MusicDetailActivity extends AppCompatActivity {
             }
         });
         advancedSeekBar = findViewById(R.id.advanceSeekBar);
-        final int duration = mediaPlayer.getDuration();
-        final int progress = mediaPlayer.getCurrentPosition();
+
+        configureSeekBar();
+
+
+
+
+
+
+
+        createAuxiliarArray();
+        createQueue();
+        createAleatory();
+        createThread();
+        createTimer();
+
+
+
+
+        Bitmap bm = BitmapFactory.decodeFile(path);
+
+        //Uri artworkUri = Uri.parse("content://media/external/audio/albumart");
+        //Uri path1 = ContentUris.withAppendedId(artworkUri, aID);
+        //Uri uri = Uri.parse("android.resource://"+getPackageName()+"/drawable/artpop");
+        Glide.with(getApplicationContext()).load(bm).apply(new RequestOptions().circleCrop()).into(image);
+        //Glide.with(image.getContext()).load(path1).into(image);
+        //image.setImageBitmap(bm);
+
+
+
+
+
+
+
+
+
+    }
+
+    public void configureSeekBar() {
+        int duration = mediaPlayer.getDuration();
+        int progress = mediaPlayer.getCurrentPosition();
         advancedSeekBar.setMax(duration);
         advancedSeekBar.setProgress(progress);
 
@@ -151,32 +192,6 @@ public class MusicDetailActivity extends AppCompatActivity {
 
             }
         });
-
-        Uri artworkUri = Uri.parse("content://media/external/audio/albumart");
-        Uri path1 = ContentUris.withAppendedId(artworkUri, aID);
-        Glide.with(image.getContext()).load(path).into(image);
-
-
-        createAuxiliarArray();
-        createQueue();
-        createAleatory();
-        createThread();
-        createTimer();
-
-
-
-
-        //Bitmap bm = BitmapFactory.decodeFile(path);
-        //image.setImageBitmap(bm);
-
-
-
-
-
-
-
-
-
     }
 
     public void createAuxiliarArray() {
@@ -316,7 +331,8 @@ public class MusicDetailActivity extends AppCompatActivity {
     }
 
     public void buttonRepeatClicked(View view) {
-        mediaPlayer.setLooping(!repeat);
+        repeat = !repeat;
+        mediaPlayer.setLooping(repeat);
     }
 
     public void buttonAleatoryClicked(View view) {
@@ -352,8 +368,11 @@ public class MusicDetailActivity extends AppCompatActivity {
                         mediaPlayer.setDataSource(queue.get(countSongs).getData());
                         drawNewSong(queue);
                     }
+
                     mediaPlayer.prepare();
                     mediaPlayer.start();
+
+                    configureSeekBar();
 
                     mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
@@ -385,8 +404,10 @@ public class MusicDetailActivity extends AppCompatActivity {
                         mediaPlayer.setDataSource(queue.get(countSongs).getData());
                         drawNewSong(queue);
                     }
+
                     mediaPlayer.prepare();
                     mediaPlayer.start();
+                    configureSeekBar();
                     mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mp) {

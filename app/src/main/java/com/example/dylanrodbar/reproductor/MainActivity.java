@@ -1,6 +1,7 @@
 package com.example.dylanrodbar.reproductor;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
@@ -115,6 +116,11 @@ public class MainActivity extends AppCompatActivity {
                 String artistTitleS = songCursor.getString(artistTitle);
                 String albumTitleS = songCursor.getString(albumTitle);
                 String dataS = songCursor.getString(data);
+                long sIdL = songCursor.getLong(sId);
+                long aIdL = songCursor.getLong(aId);
+
+                String path = getCoverArtPath(aIdL, this);
+
 
                 song.setSongName(songTitleS);
                 song.setArtistName(artistTitleS);
@@ -122,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 song.setData(dataS);
                 song.setAlbumId(aId);
                 song.setSongId(sId);
+                song.setPath(path);
                 songs.add(song);
             } while (songCursor.moveToNext());
 
@@ -130,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        ContentResolver musicResolve = getContentResolver();
+        /*ContentResolver musicResolve = getContentResolver();
         Uri smusicUri = android.provider.MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI;
         Cursor music = musicResolve.query(smusicUri, null         //should use where clause(_ID==albumid)
                 , null, null, null);
@@ -148,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
 
                 cont++;
             } while (music.moveToNext());
-        }
+        }*/
 
     }
 
@@ -174,5 +181,23 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MusicDetailActivity.class);
         intent.putExtra(EXTRA_MESSAGE, "");
         startActivity(intent);
+    }
+
+    private static String getCoverArtPath(long albumId, Context context) {
+        Cursor albumCursor = context.getContentResolver().query(
+                MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                new String[]{MediaStore.Audio.Albums.ALBUM_ART},
+                MediaStore.Audio.Albums._ID + " = ?",
+                new String[]{Long.toString(albumId)},
+                null
+        );
+        boolean queryResult = albumCursor.moveToFirst();
+        String result = null;
+        if (queryResult) {
+            int x = albumCursor.getColumnIndex(android.provider.MediaStore.Audio.Albums.ALBUM_ART);
+            result = albumCursor.getString(x);
+        }
+        albumCursor.close();
+        return result;
     }
 }

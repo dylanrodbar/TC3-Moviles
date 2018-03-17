@@ -1,6 +1,7 @@
 package com.example.dylanrodbar.reproductor;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -102,8 +103,8 @@ public class MusicListActivity extends AppCompatActivity {
             int artistTitle = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
             int albumTitle = songCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
             int data = songCursor.getColumnIndex(MediaStore.Audio.Media.DATA);
-            int sId = songCursor.getColumnIndex(projection[5]);
-            int aId = songCursor.getColumnIndex(projection[6]);
+            int sId = songCursor.getColumnIndex(MediaStore.Audio.Media._ID);
+            int aId = songCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID);
 
 
             do {
@@ -112,13 +113,18 @@ public class MusicListActivity extends AppCompatActivity {
                 String artistTitleS = songCursor.getString(artistTitle);
                 String albumTitleS = songCursor.getString(albumTitle);
                 String dataS = songCursor.getString(data);
+                long sIdL = songCursor.getLong(sId);
+                long aIdL = songCursor.getLong(aId);
+
+                String path = getCoverArtPath(aIdL, this);
 
                 song.setSongName(songTitleS);
                 song.setArtistName(artistTitleS);
                 song.setAlbumName(albumTitleS);
                 song.setData(dataS);
-                song.setAlbumId(aId);
+                //song.setAlbumId(aId);
                 song.setSongId(sId);
+                //song.setPath(path);
                 songs.add(song);
             } while (songCursor.moveToNext());
 
@@ -127,7 +133,7 @@ public class MusicListActivity extends AppCompatActivity {
 
 
 
-        ContentResolver musicResolve = getContentResolver();
+        /*ContentResolver musicResolve = getContentResolver();
         Uri smusicUri = android.provider.MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI;
         Cursor music = musicResolve.query(smusicUri, null         //should use where clause(_ID==albumid)
                 , null, null, null);
@@ -145,6 +151,24 @@ public class MusicListActivity extends AppCompatActivity {
 
                 cont++;
             } while (music.moveToNext());
+        }*/
+    }
+
+    private static String getCoverArtPath(long albumId, Context context) {
+        Cursor albumCursor = context.getContentResolver().query(
+                MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                new String[]{MediaStore.Audio.Albums.ALBUM_ART},
+                MediaStore.Audio.Albums._ID + " = ?",
+                new String[]{Long.toString(albumId)},
+                null
+        );
+        boolean queryResult = albumCursor.moveToFirst();
+        String result = null;
+        if (queryResult) {
+            int x = albumCursor.getColumnIndex(android.provider.MediaStore.Audio.Albums.ALBUM_ART);
+            result = albumCursor.getString(x);
         }
+        albumCursor.close();
+        return result;
     }
 }
