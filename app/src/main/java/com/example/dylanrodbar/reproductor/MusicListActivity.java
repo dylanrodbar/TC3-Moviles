@@ -91,7 +91,7 @@ public class MusicListActivity extends AppCompatActivity {
                 MediaStore.Audio.Media.DURATION,
                 MediaStore.Audio.Media.DATA,    // filepath of the audio file
                 MediaStore.Audio.Media._ID,
-                MediaStore.Audio.Media.ALBUM_ID// context id/ uri id of the file
+                MediaStore.Audio.Media.ALBUM_ID, // context id/ uri id of the file
         };
 
 

@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "com.example.dylanrodbar.cointransformer.MESSAGE";
     ArrayList<Song> songs;
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 MediaStore.Audio.Media.DURATION,
                 MediaStore.Audio.Media.DATA,    // filepath of the audio file
                 MediaStore.Audio.Media._ID,
-                MediaStore.Audio.Media.ALBUM_ID// context id/ uri id of the file
+                MediaStore.Audio.Media.ALBUM_ID, // context id/ uri id of the file
         };
 
         String selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0";

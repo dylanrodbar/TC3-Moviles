@@ -124,8 +124,9 @@
             android:id="@+id/imageView2"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_alignEnd="@+id/volumeSeekBar"
-            android:layout_marginEnd="47dp"
+            android:layout_above="@+id/textViewLyrics"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="24dp"
             android:background="@drawable/image_shape"
             app:srcCompat="@drawable/artpop" />
 
@@ -146,12 +147,16 @@
             android:layout_marginBottom="16dp" />
 
 
-        <ca.yourpagckage.yourapp.SubtitleView
+
+        <TextView
+            android:id="@+id/textViewLyrics"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_above=""
-            android:text="Subtitles go Here"
-            android:id="@+id/subs_box"/>
+            android:layout_above="@+id/txtSongDetail"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="11dp"
+            android:text=""
+            android:textAlignment="center" />
 
 
     </RelativeLayout>

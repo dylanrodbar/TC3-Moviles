@@ -13,7 +13,9 @@ import android.media.AudioManager;
 import android.media.Image;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.media.TimedText;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.provider.BaseColumns;
 import android.provider.ContactsContract;
@@ -36,18 +38,24 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import org.w3c.dom.Text;
+
+import java.io.BufferedReader;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MusicDetailActivity extends AppCompatActivity {
+public class MusicDetailActivity extends AppCompatActivity  {
 
     MediaPlayer mediaPlayer;
     AudioManager audioManager;
@@ -55,22 +63,30 @@ public class MusicDetailActivity extends AppCompatActivity {
     ArrayList<Song> auxiliarSongs;
     ArrayList<Song> aleatorySongs;
     ArrayList<Song> queue;
+    ArrayList<LRCSong> lrcSong;
     private boolean repeat = false;
     private boolean aleatory = false;
     SeekBar advancedSeekBar;
     int countSongs = 0;
+    Timer timer;
+    String songL;
+    int n = 0;
+    int max = 0;
+    boolean songChanged = false;
+    private static Handler handler = new Handler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_detail);
         boolean pause = false;
-
         String song = getIntent().getStringExtra("song");
+        songL = song;
         String artist = getIntent().getStringExtra("artist");
         String album = getIntent().getStringExtra("album");
         String path = getIntent().getStringExtra("path");
         String data = getIntent().getStringExtra("data");
         songs = new ArrayList<Song>();
+        lrcSong = new ArrayList<LRCSong>();
         auxiliarSongs = new ArrayList<Song>();
         aleatorySongs = new ArrayList<Song>();
         queue = new ArrayList<Song>();
@@ -93,16 +109,22 @@ public class MusicDetailActivity extends AppCompatActivity {
         tAlbum.setText(album);
 
         mediaPlayer = new MediaPlayer();
+
         try {
             mediaPlayer.setDataSource(data);
             mediaPlayer.prepare();
             mediaPlayer.start();
+
+
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     nextSong();
                 }
             });
+
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -145,8 +167,6 @@ public class MusicDetailActivity extends AppCompatActivity {
         createAuxiliarArray();
         createQueue();
         createAleatory();
-        createThread();
-        createTimer();
 
 
 
@@ -162,12 +182,97 @@ public class MusicDetailActivity extends AppCompatActivity {
 
 
 
+        setLRCToSong();
+        max = lrcSong.size();
+        createThread();
+        createThreadLRC();
+        createTimer();
 
 
 
 
 
 
+    }
+
+
+        public void setLRCToSong() {
+            TextView t = findViewById(R.id.textViewLyrics);
+            lrcSong.clear();
+            String a = songL.toLowerCase();
+            String b = a.replace(" ","");
+            Uri uri = Uri.parse("android.resource://"+getPackageName()+"/raw/"+b);
+            InputStream inputStream = null;
+            String str = "";
+           try {
+               inputStream = getContentResolver().openInputStream(uri);
+
+           } catch (FileNotFoundException e) {
+               e.printStackTrace();
+           }
+           BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
+           boolean first = true;
+           String cont = "";
+           String dura = "00:00.00";
+           long duraLrc = convertTime(dura);
+           LRCSong l = new LRCSong(cont, duraLrc);
+           lrcSong.add(l);
+           try {
+               while((str = in.readLine())!=null){
+                    String duration = str.substring(1, 9);
+                    String fin = str.substring(10, str.length());
+                    long lrcDuration = convertTime(duration);
+                    LRCSong lr = new LRCSong(fin, lrcDuration);
+                    long prevLrcDuration = lrcSong.get(lrcSong.size() - 1).getDuration();
+                    long prevSleepDuration = timeOfLine(prevLrcDuration, lrcDuration);
+
+                    lrcSong.get(lrcSong.size()-1).setSleepDuration(prevSleepDuration);
+                    lrcSong.add(lr);
+
+
+               }
+               lrcSong.get(lrcSong.size() - 1).setSleepDuration(0);
+
+
+           } catch (IOException e) {
+               e.printStackTrace();
+           }
+
+
+   }
+
+   public long timeOfLine(long time1, long time2) {
+        return time2 - time1;
+
+   }
+
+   public long convertTime(String time) {
+       time = time.replace('.', ':');
+       String[] times = time.split(":");
+       // mm:ss:SS
+       return Integer.valueOf(times[0]) * 60 * 1000 +
+               Integer.valueOf(times[1]) * 1000 +
+               Integer.valueOf(times[2]) ;
+   }
+
+    public void setAlbumImage() {
+        Bitmap bm;
+        ImageView image = findViewById(R.id.imageView2);
+        if(aleatory){
+            bm = BitmapFactory.decodeFile(aleatorySongs.get(countSongs).getPath());
+
+        }
+        else{
+            bm = BitmapFactory.decodeFile(queue.get(countSongs).getPath());
+        }
+
+
+        //Uri artworkUri = Uri.parse("content://media/external/audio/albumart");
+        //Uri path1 = ContentUris.withAppendedId(artworkUri, aID);
+        //Uri uri = Uri.parse("android.resource://"+getPackageName()+"/drawable/artpop");
+        Glide.with(getApplicationContext()).load(bm).apply(new RequestOptions().circleCrop()).into(image);
+        //Glide.with(image.getContext()).load(path1).into(image);
+        //image.setImageBitmap(bm);
     }
 
     public void configureSeekBar() {
@@ -203,6 +308,7 @@ public class MusicDetailActivity extends AppCompatActivity {
             so.setAlbumId(s.getAlbumId());
             so.setSongId(s.getSongId());
             so.setData(s.getData());
+            so.setPath(s.getPath());
             auxiliarSongs.add(so);
         }
     }
@@ -216,6 +322,7 @@ public class MusicDetailActivity extends AppCompatActivity {
             so.setAlbumId(s.getAlbumId());
             so.setSongId(s.getSongId());
             so.setData(s.getData());
+            so.setPath(s.getPath());
             queue.add(so);
         }
         Song z = queue.get(1);
@@ -289,24 +396,93 @@ public class MusicDetailActivity extends AppCompatActivity {
 
     }
 
+    public void drawTextLyrics(String text) {
+        TextView t = findViewById(R.id.textViewLyrics);
+        t.setText(text);
+    }
+
+    public void createThreadLRC() {
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                Thread tr = Thread.currentThread();
+                //int n = lrcSong.size();
+                //int i = 0;
+                long time = 0;
+                String text = "";
+                String text1 = "";
+                while (true) {
+
+                    if (!mediaPlayer.isPlaying()) {
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    else {
+                        try {
+                            time = lrcSong.get(n).getSleepDuration();
+                            text = lrcSong.get(n).getContent();
+                            Thread.sleep(time);
+                            text1 = lrcSong.get(n+1).getContent();
+                            n++;
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+
+                    final long finalTime = time;
+                    final String finalText = text1;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            drawTextLyrics(finalText);
+                            try {
+                                Thread.sleep(10);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+
+                }
+
+            }
+        };
+
+        Thread t = new Thread(r, "T1");
+        t.start();
+
+    }
+
+
+
     public void createTimer() {
-        Timer timer = new Timer();
+        timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 advancedSeekBar.setProgress(mediaPlayer.getCurrentPosition());
             }
-        },0,1000);
+        },0, 1000);
     }
 
 
 
 
     public void drawSongRotation() {
-        ImageView relativeSong = findViewById(R.id.imageView2);
-        ImageButton imgV = findViewById(R.id.playSongButton);
-        float deg = relativeSong.getRotation() + 70F;
-        relativeSong.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
+        if(mediaPlayer.isPlaying()) {
+            ImageView relativeSong = findViewById(R.id.imageView2);
+            ImageButton imgV = findViewById(R.id.playSongButton);
+            float deg = relativeSong.getRotation() + 70F;
+            relativeSong.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
+        }
+
     }
 
 
@@ -374,6 +550,12 @@ public class MusicDetailActivity extends AppCompatActivity {
 
                     configureSeekBar();
 
+                    setAlbumImage();
+
+                    songL = "applause";
+                    this.n = 0;
+                    setLRCToSong();
+
                     mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mp) {
@@ -408,6 +590,8 @@ public class MusicDetailActivity extends AppCompatActivity {
                     mediaPlayer.prepare();
                     mediaPlayer.start();
                     configureSeekBar();
+
+                    setAlbumImage();
                     mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mp) {
@@ -422,7 +606,6 @@ public class MusicDetailActivity extends AppCompatActivity {
             }
         }
     }
-
 
 
 
