@@ -358,6 +358,7 @@ public class MusicDetailActivity extends AppCompatActivity  {
             so.setAlbumId(auxiliarSongs.get(ri).getAlbumId());
             so.setSongId(auxiliarSongs.get(ri).getSongId());
             so.setData(auxiliarSongs.get(ri).getData());
+            so.setPath(auxiliarSongs.get(ri).getPath());
             aleatorySongs.add(so);
 
             auxiliarSongs.remove(ri);
